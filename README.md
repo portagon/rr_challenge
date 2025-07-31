@@ -80,7 +80,7 @@ platforms:
 ### 4. ⚙️ Tech Stack
 This challenge should be built using:
 
-- Ruby on Rails 7
+- Ruby on Rails 7-8
 - Hotwire (Turbo Frames, Turbo Streams)
 - Stimulus.js
 - Redis (optional, for state storage)
