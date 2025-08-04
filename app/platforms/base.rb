@@ -72,6 +72,10 @@ module Platforms
         @index >= (@steps.length - 1)
       end
 
+      def total_steps
+        @steps.length
+      end
+
       def reset
         @index = 0
       end

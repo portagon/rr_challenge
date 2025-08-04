@@ -7,6 +7,10 @@
       <p>Thank you for your investment.</p>
     </div>
   <% else %>
+    <div class="progress mb-4">
+      <div class="progress-bar" style="width: <%= ( (@step_index.to_f) / @total_steps.to_f ) * 100 %>%" role="progressbar" aria-valuenow="<%= @step_index %>" aria-valuemin="0" aria-valuemax="<%= @total_steps %>"></div>
+    </div>
+
     <div class="position-relative" data-controller="wizard-step" data-wizard-step-target="container">
       <%= form_with url: steps_path, data: { turbo_frame: "step_container" }, html: { class: "needs-validation", autocomplete: "off" } do %>
         <%= hidden_field_tag :platform_class, @platform_class %>

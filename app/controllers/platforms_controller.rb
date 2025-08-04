@@ -56,6 +56,7 @@ class PlatformsController < ApplicationController
     @step_value = value || wizard_answers.dig("answers", @step_index.to_s)
     @error = error
     @last_step = @enumerator.last?
+    @total_steps = @enumerator.total_steps
     render partial: "steps/step"
   end
 
