@@ -31,7 +31,7 @@ class PlatformsController < ApplicationController
     end
 
     answers[step_index.to_s] = value
-    wizard_answers[:step_index] = step_index + 1
+    wizard_answers["step_index"] = step_index + 1
     @enumerator.next
 
     render_step(step_index: wizard_answers[:step_index], value: answers[wizard_answers[:step_index].to_s])
