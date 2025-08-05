@@ -22,7 +22,7 @@ class PlatformsController < ApplicationController
       return render_step
     when "Back"
       @enumerator.previous
-      step_index = [step_index - 1, 0].max
+      step_index = [ step_index - 1, 0 ].max
       return render_step(step_index: step_index, value: answers[step_index.to_s])
     end
 
@@ -41,9 +41,9 @@ class PlatformsController < ApplicationController
 
   def set_platform_and_enumerator
     @platform_class = params[:platform_class]
-    klass = Platforms.const_get(@platform_class) rescue nil
-    unless klass && klass < Platforms::Base
-      raise ArgumentError, "Unauthorized platform class"
+
+    klass = PLATFORM_CLASS_AND_NAME_MAP.fetch(@platform_class) do
+      raise ArgumentError, "Unknown platform class: #{@platform_class}"
     end
     step_index = params[:step_index]&.to_i || wizard_answers["step_index"] || 0
     platform = klass.new

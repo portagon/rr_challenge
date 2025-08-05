@@ -1,4 +1,5 @@
 require 'rails_helper'
+require Rails.root.join("app/platforms/base")
 
 class TestPlatform < Platforms::Base
   title "Test Platform"
@@ -38,6 +39,7 @@ RSpec.describe PlatformsController, type: :controller do
     allow(enumerator).to receive(:previous)
     allow(enumerator).to receive(:total_steps)
     session[:wizard] = wizard_session
+    stub_const("PLATFORM_CLASS_AND_NAME_MAP", { "TestPlatform" => TestPlatform })
   end
 
   describe "GET #steps" do
