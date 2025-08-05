@@ -38,6 +38,7 @@ RSpec.describe PlatformsController, type: :controller do
     allow(enumerator).to receive(:last?).and_return(false)
     allow(enumerator).to receive(:next)
     allow(enumerator).to receive(:previous)
+    allow(enumerator).to receive(:total_steps)
     session[:wizard] = wizard_session
   end
 
