@@ -5,7 +5,7 @@ if Rails.env.development? || Rails.env.test?
 end
 
 PLATFORM_CLASSES_AND_TITLES = Platforms::Base.descendants.map do |klass|
-  [klass.name, klass.title]
+  [ klass.name, klass.title ]
 end
 PLATFORM_CLASSES_AND_TITLES.freeze
 

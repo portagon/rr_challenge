@@ -10,7 +10,7 @@ module StepsHelper
   def render_step_input(step, value)
     case step[:type]
     when :amount_input
-      text_field_tag(:step_value, value, min: step.dig(:config, :min), max: step.dig(:config, :max), 
+      text_field_tag(:step_value, value, min: step.dig(:config, :min), max: step.dig(:config, :max),
                       class: "form-control form-control-lg mb-2 shadow-sm", placeholder: "Enter an amount", autofocus: true, required: true)
     when :text_input
       text_field_tag(:step_value, value, placeholder: step.dig(:config, :placeholder),
