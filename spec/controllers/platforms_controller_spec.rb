@@ -28,8 +28,6 @@ RSpec.describe PlatformsController, type: :controller do
   let(:current_step) { { type: :amount_input, config: { min: 1, max: 10 } } }
 
   before do
-    stub_const("TestPlatform", Class.new)
-
     allow(TestPlatform).to receive(:new).and_return(test_platform)
 
     allow(test_platform).to receive(:call).and_return(enumerator)
