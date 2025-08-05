@@ -41,8 +41,12 @@ class PlatformsController < ApplicationController
 
   def set_platform_and_enumerator
     @platform_class = params[:platform_class]
+    klass = Platforms.const_get(@platform_class) rescue nil
+    unless klass && klass < Platforms::Base
+      raise ArgumentError, "Unauthorized platform class"
+    end
     step_index = params[:step_index]&.to_i || wizard_answers["step_index"] || 0
-    platform = Object.const_get(@platform_class).new
+    platform = klass.new
     @enumerator = platform.call(step_index)
     @step = @enumerator.current
     @finished = wizard_answers["finished"]
