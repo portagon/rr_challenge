@@ -6,7 +6,10 @@ class PlatformsController < ApplicationController
   def index; end
 
   def steps
-    render_step
+    respond_to do |format|
+      format.html { render_step }
+      format.turbo_stream { render_step(is_turbo_stream: true) }
+    end
   end
 
   def submit_step
@@ -19,25 +22,52 @@ class PlatformsController < ApplicationController
     when "Finish"
       wizard_answers[:finished] = true
       @finished = true
-      return render_step
+      return respond_to do |format|
+        format.html { render_step }
+        format.turbo_stream { render_step(is_turbo_stream: true) }
+      end
     when "Back"
       @enumerator.previous
       step_index = [ step_index - 1, 0 ].max
-      return render_step(step_index: step_index, value: answers[step_index.to_s])
+      return respond_to do |format|
+        format.html { render_step(step_index: step_index, value: answers[step_index.to_s]) }
+        format.turbo_stream { render_step(step_index: step_index, value: answers[step_index.to_s], is_turbo_stream: true) }
+      end
     end
 
     if error
-      return render_step(step_index: step_index, error: error, value: value)
+      return respond_to do |format|
+        format.html { render_step(step_index: step_index, error: error, value: value) }
+        format.turbo_stream { render_step(step_index: step_index, error: error, value: value, is_turbo_stream: true) }
+      end
     end
 
     answers[step_index.to_s] = value
     wizard_answers["step_index"] = step_index + 1
     @enumerator.next
 
-    render_step(step_index: wizard_answers[:step_index], value: answers[wizard_answers[:step_index].to_s])
+    respond_to do |format|
+      format.html { render_step(step_index: wizard_answers[:step_index], value: answers[wizard_answers[:step_index].to_s]) }
+      format.turbo_stream { render_step(step_index: wizard_answers[:step_index], value: answers[wizard_answers[:step_index].to_s], is_turbo_stream: true) }
+    end
   end
 
   private
+
+  def render_step(step_index: nil, error: nil, value: nil, is_turbo_stream: false)
+    @step_index = step_index.presence || wizard_answers["step_index"]
+    @step = @enumerator.current
+    @step_value = value || wizard_answers.dig("answers", @step_index.to_s)
+    @error = error
+    @last_step = @enumerator.last?
+    @total_steps = @enumerator.total_steps
+
+    if is_turbo_stream
+      render turbo_stream: turbo_stream.replace("step_container", partial: "steps/step")
+    else
+      render partial: "steps/step"
+    end
+  end
 
   def set_platform_and_enumerator
     @platform_class = params[:platform_class]
@@ -52,16 +82,6 @@ class PlatformsController < ApplicationController
     @finished = wizard_answers["finished"]
     @step_index = step_index
     @error = nil
-  end
-
-  def render_step(step_index: nil, error: nil, value: nil)
-    @step_index = step_index.presence || wizard_answers["step_index"]
-    @step = @enumerator.current
-    @step_value = value || wizard_answers.dig("answers", @step_index.to_s)
-    @error = error
-    @last_step = @enumerator.last?
-    @total_steps = @enumerator.total_steps
-    render partial: "steps/step"
   end
 
   def validate_step(step, value)
