@@ -12,7 +12,13 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
 
+  resources :platforms, only: [ :index ] do
+    collection do
+      get :steps
+      post :next_step
+      post :back_step
+      post :finish
+    end
+  end
   root "platforms#index"
-  get  "/steps", to: "platforms#steps"
-  post "/steps", to: "platforms#submit_step"
 end

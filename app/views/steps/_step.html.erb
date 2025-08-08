@@ -11,24 +11,37 @@
       <div class="progress-bar" style="width: <%= ( (@step_index.to_f) / @total_steps.to_f ) * 100 %>%" role="progressbar" aria-valuenow="<%= @step_index %>" aria-valuemin="0" aria-valuemax="<%= @total_steps %>"></div>
     </div>
 
-    <div class="position-relative" data-controller="wizard-step" data-wizard-step-target="container">
-      <%= form_with url: steps_path, data: { turbo_frame: "step_container" }, html: { class: "needs-validation", autocomplete: "off" } do %>
+    <!-- Connect wizard-step controller -->
+    <div data-controller="wizard-step" class="position-relative">
+      <%= form_with url: next_step_platforms_path,
+                    data: { turbo_frame: "step_container", "wizard-step-target": "form" },
+                    html: { class: "needs-validation", autocomplete: "off" },
+                    id: "wizard_form" do %>
+
         <%= hidden_field_tag :platform_class, @platform_class %>
         <%= hidden_field_tag :step_index, @step_index %>
         <%= render_step(@step, value: @step_value, error: @error) %>
+
         <div class="d-flex justify-content-between align-items-center gap-3 mt-4">
           <% if @step_index > 0 %>
-            <%= submit_tag "Back", name: "commit", formnovalidate: true, class: "btn btn-outline-secondary rounded-pill px-4" %>
+            <%= submit_tag "Back", name: "commit", formnovalidate: true,
+                           class: "btn btn-outline-secondary rounded-pill px-4",
+                           data: { action: "click->wizard-step#submitBack" } %>
           <% else %>
             <div></div>
           <% end %>
+
           <% if @last_step %>
-            <%= submit_tag "Finish", name: "commit", class: "btn btn-success rounded-pill px-4 ms-auto" %>
+            <%= submit_tag "Finish", name: "commit",
+                           class: "btn btn-success rounded-pill px-4 ms-auto",
+                           data: { action: "click->wizard-step#submitFinish" } %>
           <% else %>
-            <%= submit_tag "Next", name: "commit", class: "btn btn-primary rounded-pill px-4 ms-auto" %>
+            <%= submit_tag "Next", name: "commit",
+                           class: "btn btn-primary rounded-pill px-4 ms-auto" %>
           <% end %>
         </div>
       <% end %>
+
       <div data-wizard-step-target="loader" class="loader-overlay d-none">
         <div class="loader-spinner"></div>
       </div>

@@ -6,7 +6,7 @@ export default class extends Controller {
     const container = document.getElementById('step_container');
 
     if (platform) {
-      container.src = `/steps?platform_class=${encodeURIComponent(platform)}`;
+      container.src = `/platforms/steps?platform_class=${encodeURIComponent(platform)}`;
     } else {
       container.innerHTML = "";
       container.removeAttribute("src");
